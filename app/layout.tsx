@@ -6,12 +6,14 @@ import { ThemeProvider } from "@/components/providers/theme-provider"
 
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
+  // SignInButton,
+  // SignedIn,
+  // SignedOut,
+  // UserButton
 } from '@clerk/nextjs'
 import { cn } from "@/lib/utils";
+import { StateProvider } from '@/context/index'
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,12 +44,12 @@ export default function RootLayout({
                 "bg-slate-200 dark:bg-[#313338]"
           )}
         >
-          <SignedOut>
+          {/* <SignedOut>
             <SignInButton />
           </SignedOut>
           <SignedIn>
             <UserButton />
-          </SignedIn>
+          </SignedIn> */}
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -55,7 +57,9 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="LootCrate-theme"
           >
-          {children}
+            <StateProvider>
+              {children}
+            </StateProvider>
           </ThemeProvider>
         </body>
       </html>
