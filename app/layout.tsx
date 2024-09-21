@@ -13,6 +13,7 @@ import {
 } from '@clerk/nextjs'
 import { cn } from "@/lib/utils";
 import { StateProvider } from '@/context/index'
+import Navbar from "@/components/ui2/Navbar";
 
 
 const geistSans = localFont({

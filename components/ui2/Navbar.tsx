@@ -29,7 +29,7 @@ const Navbar = () => {
 
     return (
         <>
-            <div className='w-[100vw] h-[7vh] bg-slate-500 flex items-center justify-around'>
+            <div className='w-[100vw] h-[8vh] flex items-center justify-around'>
                 <div className='flex items-center justify-center gap-2'>
                     <div className='icon'>
                         <Image
@@ -45,10 +45,10 @@ const Navbar = () => {
                 </div>
                 <div className='items-center justify-center gap-8 hidden md:flex'>
                     <NavigationMenu>
-                        <NavigationMenuList className="flex items-center space-x-6">
+                        <NavigationMenuList className="flex items-center justify-center space-x-6">
                             {/* Features Menu */}
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="text-white font-medium">
+                                <NavigationMenuTrigger className="text-white font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80">
                                     Features
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent className=" rounded-lg shadow-lg p-4">
@@ -62,9 +62,6 @@ const Navbar = () => {
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
-                    <div>
-                        <Button variant={"secondary"}>About Me</Button>
-                    </div>
                     <div>
                         <Button variant={"secondary"}>Contact</Button>
                     </div>

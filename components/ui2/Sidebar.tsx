@@ -15,9 +15,6 @@ const Sidebar = () => {
     <div className='min-h-[65vh] w-[100vw] bg-lime-400 flex flex-col items-center justify-start gap-8'>
       <div className='flex items-center justify-center gap-4 flex-wrap m-[3vh]'>
         <div>
-          <Button size={"lg"} variant={"secondary"}>About Me</Button>
-        </div>
-        <div>
           <Button size={"lg"} variant={"secondary"}>Contact</Button>
         </div>
         <div>
