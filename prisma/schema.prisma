@@ -22,6 +22,7 @@ model Profile{
   email     String    @db.Text
 
   searchQuery SearchQuery[]
+  songs      Songs[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -34,6 +35,20 @@ model SearchQuery {
   profile     Profile   @relation(fields: [profileId], references: [id])
   
   query       String    @db.Text
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([profileId])
+}
+
+model Songs{
+  id            String    @id @default(uuid())
+
+  profileId   String
+  profile     Profile   @relation(fields: [profileId], references: [id])
+  
+  songURL   String    @db.Text
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

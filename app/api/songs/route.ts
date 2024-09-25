@@ -22,12 +22,23 @@ export async function POST(req: Request) {
   
       const searchedQuery = await db.searchQuery.create({
         data: {
-            query: searchQuery,
+          query: searchQuery,
           profileId: profile.id,
         }
       })
 
-      return NextResponse.json(searchedQuery);
+      const apiKey = process.env.YOUTUBE_API_KEY;
+
+      if (!apiKey) {
+        return NextResponse.json({ error: 'API key not set' }, { status: 500 });
+      }
+
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(searchQuery)}&key=${apiKey}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      return NextResponse.json({ searchedQuery, youtubeResults: data.items || [] });
 
     } catch (error) {
       console.error("[SearchQuery POST ERROR]", error);
