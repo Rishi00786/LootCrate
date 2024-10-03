@@ -49,6 +49,7 @@ model Songs{
   profile     Profile   @relation(fields: [profileId], references: [id])
   
   songURL   String    @db.Text
+  songTitle   String    @db.Text
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
