@@ -114,7 +114,7 @@ const Page = () => {
             <Input
               className='w-[40vw] h-12'
               type='text'
-              placeholder='e.g. Perfect by Ed Sheeran'
+              placeholder='e.g. Money Rain Phonk'
               value={searchQuery}
               onChange={handleInputChange}
             />
