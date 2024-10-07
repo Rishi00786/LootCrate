@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     //   console.log(searchQuery);
     //   console.log(db.searchQuery)
   
-      const searchedQuery = await db.searchQuery.create({
+      const searchedQuery = await db.searchQuerySongs.create({
         data: {
           query: searchQuery,
           profileId: profile.id,
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ searchedQuery, youtubeResults: data.items || [] });
 
     } catch (error) {
-      console.error("[SearchQuery POST ERROR]", error);
+      console.error("[SearchQuerySongs POST ERROR]", error);
       return new NextResponse("Internal Server Error", { status: 500 });
     }
   }

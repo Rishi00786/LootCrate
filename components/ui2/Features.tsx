@@ -13,25 +13,7 @@ const Features = () => {
             <Link href="/songs"><Button className='h-14 font-semibold'>Download Songs</Button></Link>
         </div>
         <div>
-            <Button className='h-14 font-semibold'>Download Books</Button>
-        </div>
-        <div>
-            <Button className='h-14 font-semibold'>Download Movies</Button>
-        </div>
-        <div>
-            <Button className='h-14 font-semibold'>Download Movies</Button>
-        </div>
-        <div>
-            <Button className='h-14 font-semibold'>Download Movies</Button>
-        </div>
-        <div>
-            <Button className='h-14 font-semibold'>Download Movies</Button>
-        </div>
-        <div>
-            <Button className='h-14 font-semibold'>Download Movies</Button>
-        </div>
-        <div>
-            <Button className='h-14 font-semibold'>Download Movies</Button>
+            <Link href="/webseries"><Button className='h-14 font-semibold'>Download Web Series</Button></Link>
         </div>
       </div>
     </div>

@@ -21,14 +21,30 @@ model Profile{
   imageUrl  String    @db.Text
   email     String    @db.Text
 
-  searchQuery SearchQuery[]
+  searchQuerySongs SearchQuerySongs[]
   songs      Songs[]
+
+  searchQueryWebSeries SearchQueryWebSeries[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
-model SearchQuery {
+model SearchQuerySongs {
+  id          String    @id @default(uuid())
+
+  profileId   String
+  profile     Profile   @relation(fields: [profileId], references: [id])
+  
+  query       String    @db.Text
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([profileId])
+}
+
+model SearchQueryWebSeries {
   id          String    @id @default(uuid())
 
   profileId   String
