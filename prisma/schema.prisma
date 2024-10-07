@@ -25,6 +25,7 @@ model Profile{
   songs      Songs[]
 
   searchQueryWebSeries SearchQueryWebSeries[]
+  episodes  WebSeriesEpisode[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -66,6 +67,21 @@ model Songs{
   
   songURL   String    @db.Text
   songTitle   String    @db.Text
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([profileId])
+}
+
+model WebSeriesEpisode{
+  id            String    @id @default(uuid())
+
+  profileId   String
+  profile     Profile   @relation(fields: [profileId], references: [id])
+  
+  episodeURL   String    @db.Text
+  episodeName   String    @db.Text
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

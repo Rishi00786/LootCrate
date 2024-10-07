@@ -49,12 +49,12 @@ export async function POST(req: Request) {
         
         // Extract data
         const articles = await page.evaluate(() => {
-            const results: { title: string; href: string }[] = [];
+            const results: { title: string; link: string }[] = [];
             document.querySelectorAll('article a').forEach(anchor => {
                 const title = anchor.getAttribute('title');  // Get the title
-                const href = anchor.getAttribute('href');  // Get the article link
-                if (title && href) {
-                    results.push({ title, href });
+                const link = anchor.getAttribute('href');  // Get the article link
+                if (title && link) {
+                    results.push({ title, link });
                 }
             });
             return results;
