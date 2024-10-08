@@ -105,6 +105,7 @@ const Page = () => {
     };
 
     const handleDownloadEpisode = async ({ link, fileName }: { link: string; fileName: string }) => {
+        console.log(link)
         try {
             const response = await fetch('/api/webseries/download', {
                 method: 'POST',
@@ -116,6 +117,7 @@ const Page = () => {
 
             if (response.ok) {
                 const { downloadLink } = await response.json();
+                // console.log("response", response.json())
                 if (downloadLink) {
                     const a = document.createElement('a');
                     a.href = downloadLink;
@@ -153,20 +155,29 @@ const Page = () => {
                     {episodes.length > 0 ? (
                         episodes.map((episode, index) => (
                             <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-lg shadow-md">
-                                {episode.fileName && <div className="text-lg font-semibold">{episode.fileName}</div>}
-                                {episode.finalLink && <div className="text-lg font-semibold">{episode.finalLink}</div>}
+                                {episode.fileName ? <div className="text-lg font-semibold">{episode.fileName}</div>
+                                                :   <div className="text-lg font-semibold">{episode.linkText}</div>
+                            }
+                                {/* {episode.file && <div className="text-lg font-semibold">{episode.fileName}</div>} */}
                                 <button
                                     onClick={() => {
-                                        if (episode.fileName) { // Check if fileName is defined
-                                            handleDownloadEpisode({ link: episode.linkText, fileName: episode.fileName });
+                                        if (episode.fileName ) { // Ensure both fileName and linkText are defined
+                                            handleDownloadEpisode({
+                                                link:  episode.linkText || '', // Provide a fallback empty string
+                                                fileName: episode.fileName  // Provide a fallback empty string
+                                            });
                                         } else {
-                                            console.error('File name is undefined'); // Optional: handle the case
-                                        }
+                                            handleDownloadEpisode({
+                                                link:  episode.finalLink || '', // Provide a fallback empty string
+                                                fileName: episode.linkText  // Provide a fallback empty string
+                                            });                                        }
                                     }}
                                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
                                 >
                                     Download Episode
                                 </button>
+
+
                             </div>
                         ))
                     ) : seasons.length > 0 ? (

@@ -26,12 +26,6 @@ export async function POST(req: Request) {
             return new NextResponse("Invalid link", { status: 400 });
         }
 
-        const MYdata = process.env.MYDATA;
-
-        if (!MYdata) {
-            throw new Error("MYDATA environment variable is not defined");
-        }
-
         browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
