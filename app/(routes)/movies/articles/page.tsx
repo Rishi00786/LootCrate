@@ -1,21 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client";
+"use client"
+import { useStateContext } from '@/context'
+import { useRouter } from 'next/navigation'
+import React from 'react'
 
-import { useStateContext } from '@/context';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-
-const Page = () => {
-    const { searchQuerySeries,
-        result,
-        setSeasons,
-    } = useStateContext();
-
+const page = () => {
+    
     const router = useRouter()
 
-    const handleGetSeasons = async ({ link }: { link: string }) => {
+    const {setQualityLinks,  searchQueryMovies , movieResults }  = useStateContext()
+
+
+    const handleGetQualityLinks = async ({ link }: { link: string }) => {
         try {
-            const response = await fetch('/api/webseries/seasons', {
+            const response = await fetch('/api/movies/qualityLinks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,34 +23,35 @@ const Page = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                setSeasons(data.downloadInfo || []);
-                router.push('/webseries/seasons')
+                setQualityLinks(data.downloadInfo || []);
+                router.push('/movies/qualityLinks')
             } else {
                 console.error('Failed to fetch seasons');
             }
         } catch (error) {
-            console.error('Error fetching seasons', error);
+            console.error('Error fetching QualityLinks', error);
         }
-    };
+    }
 
-    return (
-        <div className='flex flex-col items-center justify-center'>
+
+  return (
+    <div className='flex flex-col items-center justify-center'>
             <div className='text-5xl font-bold mb-8 mt-4'>
-                Articles related To {searchQuerySeries}
+                Articles related To {searchQueryMovies}
             </div>
-            {result.map((series, index) => (
+            {movieResults.map((series, index) => (
                 <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-lg shadow-md">
                     <div className="text-lg font-semibold">{series.title}</div>
                     <button
-                        onClick={() => handleGetSeasons({ link: series.link })}
+                        onClick={() => handleGetQualityLinks({ link: series.link })}
                         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
                     >
-                        Get Seasons
+                        Get DownloadLinks
                     </button>
                 </div>
             ))}
         </div>
-    );
-};
+  )
+}
 
-export default Page;
+export default page

@@ -15,6 +15,9 @@ const Features = () => {
         <div>
             <Link href="/webseries"><Button className='h-14 font-semibold'>Download Web Series</Button></Link>
         </div>
+        <div>
+            <Link href="/movies"><Button className='h-14 font-semibold'>Download Movies</Button></Link>
+        </div>
       </div>
     </div>
   )

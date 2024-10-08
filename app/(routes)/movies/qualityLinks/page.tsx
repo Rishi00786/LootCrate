@@ -2,15 +2,17 @@
 "use client";
 
 import { useStateContext } from '@/context';
+// import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const Page = () => {
-    const { episodes , searchQuerySeries } = useStateContext();
+    const { searchQueryMovies, qualityLinks } = useStateContext();
 
-    const handleDownloadEpisode = async ({ link, fileName }: { link: string; fileName: string }) => {
-        console.log(link);
+    // const router = useRouter();
+
+    const handleDownloadMovie = async ({ link, fileName }: { link: string; fileName: string }) => {
         try {
-            const response = await fetch('/api/webseries/download', {
+            const response = await fetch('/api/movies/download', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -20,6 +22,7 @@ const Page = () => {
 
             if (response.ok) {
                 const { downloadLink } = await response.json();
+                console.log(downloadLink)
                 if (downloadLink) {
                     const a = document.createElement('a');
                     a.href = downloadLink;
@@ -38,38 +41,30 @@ const Page = () => {
         }
     };
 
+    // Filter out seasons that contain "10bit" or "HCVC" in any element of seasonInfo
+    const filteredQualityLinks = qualityLinks.filter(season => {
+        return !season.seasonInfo.some(info => info.includes('10bit') || info.includes('HCVC'));
+    });
+
     return (
         <div className='flex flex-col items-center justify-center'>
-            <div className='text-5xl font-bold mb-8 mt-20'>
-                Episodes related To {searchQuerySeries}
+            <div className='text-5xl font-bold mb-8 mt-4'>
+                Quality Links related To {searchQueryMovies}
             </div>
-            {episodes.length > 0 ? (
-                episodes.map((episode, index) => (
+            {filteredQualityLinks.length === 0 ? (
+                <p>No valid quality links found for {searchQueryMovies}.</p>
+            ) : (
+                filteredQualityLinks.map((season, index) => (
                     <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-lg shadow-md">
-                        {episode.fileName ? (
-                            <div className="text-lg font-semibold">{episode.fileName}</div>
-                        ) : (
-                            <div className="text-lg font-semibold">{episode.linkText}</div>
-                        )}
+                        <div className="text-lg font-semibold">{season.seasonInfo.join(', ')}</div>
                         <button
-                            onClick={() => {
-                                const link = episode.fileName ? episode.linkText : episode.finalLink;
-                                const fileName = episode.fileName || episode.linkText;
-                                if (link) {
-                                    handleDownloadEpisode({
-                                        link: link || '', // Ensure link is not null
-                                        fileName: fileName || '', // Ensure fileName is not null
-                                    });
-                                }
-                            }}
+                            onClick={() => handleDownloadMovie({ link: season.googleDriveLink, fileName: season.seasonInfo.flat().join(' ') })}
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
                         >
-                            Download Episode
+                            Download
                         </button>
                     </div>
                 ))
-            ) : (
-                <div>No episodes available.</div>
             )}
         </div>
     );

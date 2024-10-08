@@ -7,12 +7,18 @@ interface StateContextType {
     setSidebar: React.Dispatch<React.SetStateAction<boolean>>;
     result: MovieResult[];
     setResult: React.Dispatch<React.SetStateAction<MovieResult[]>>;
+    movieResults: MovieResult[];
+    setMovieResults: React.Dispatch<React.SetStateAction<MovieResult[]>>;
     seasons: SeasonInfo[];
     setSeasons: React.Dispatch<React.SetStateAction<SeasonInfo[]>>;
     episodes: EpisodeInfo[];
     setEpisodes: React.Dispatch<React.SetStateAction<EpisodeInfo[]>>;
-    searchQuery: string;
-    setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+    searchQuerySeries: string;
+    setSearchQuerySeries: React.Dispatch<React.SetStateAction<string>>;
+    searchQueryMovies: string;
+    setSearchQueryMovies: React.Dispatch<React.SetStateAction<string>>;
+    qualityLinks: SeasonInfo[];
+    setQualityLinks: React.Dispatch<React.SetStateAction<SeasonInfo[]>>;
 }
 
 interface MovieResult {
@@ -45,9 +51,12 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
 
     const [sidebar, setSidebar] = useState<boolean>(false);
     const [result, setResult] = useState<MovieResult[]>([]);
+    const [movieResults, setMovieResults] = useState<MovieResult[]>([]);
     const [seasons, setSeasons] = useState<SeasonInfo[]>([]);
     const [episodes, setEpisodes] = useState<EpisodeInfo[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [qualityLinks, setQualityLinks] = useState<SeasonInfo[]>([]);
+    const [searchQuerySeries, setSearchQuerySeries] = useState('');
+    const [searchQueryMovies, setSearchQueryMovies] = useState('');
 
     return (
         <StateContext.Provider value={{ 
@@ -55,7 +64,10 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
             result, setResult, 
             seasons, setSeasons, 
             episodes, setEpisodes,
-            searchQuery, setSearchQuery 
+            searchQuerySeries, setSearchQuerySeries,
+            setSearchQueryMovies , searchQueryMovies ,
+            movieResults, setMovieResults,
+            qualityLinks, setQualityLinks
         }}>
             {children}
         </StateContext.Provider>

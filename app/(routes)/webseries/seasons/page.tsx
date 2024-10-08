@@ -12,7 +12,7 @@ interface EpisodeInfo {
 }
 
 const Page = () => {
-    const { searchQuery,
+    const { searchQuerySeries,
         seasons,
         setEpisodes
     } = useStateContext();
@@ -45,7 +45,7 @@ const Page = () => {
     return (
         <div className='flex flex-col items-center justify-center'>
             <div className='text-5xl font-bold mb-8 mt-4'>
-                Seasons related To {searchQuery}
+                Seasons related To {searchQuerySeries}
             </div>
             {seasons.map((season, index) => (
                 <div key={index} className="flex flex-col items-center gap-2 p-4 rounded-lg shadow-md">
