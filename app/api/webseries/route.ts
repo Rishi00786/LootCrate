@@ -14,16 +14,16 @@ export async function POST(req: Request) {
         }
     
         const body = await req.json();
-        const { searchQuery } = body;
+        const { searchQuerySeries } = body;
     
-        if (!searchQuery) {
+        if (!searchQuerySeries) {
           return new NextResponse("Invalid search query", { status: 400 });
         }
 
         // Log search query in DB
         const searchedQuery = await db.searchQueryWebSeries.create({
           data: {
-            query: searchQuery,
+            query: searchQuerySeries,
             profileId: profile.id,
           }
         });
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         await page.goto(MYdata);
         
         // Perform search
-        await page.type('input[name="s"]', searchQuery);  // Ensure the selector is correct
+        await page.type('input[name="s"]', searchQuerySeries);  // Ensure the selector is correct
         await page.keyboard.press('Enter');
         
         // Wait for results (you may need to adjust this based on page behavior)

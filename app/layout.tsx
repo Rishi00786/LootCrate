@@ -39,8 +39,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`,
-                "bg-slate-200 dark:bg-[#313338]"
+          className={cn(`${geistSans.variable} ${geistMono.variable} antialiased
+            bg-gradient-to-r from-gray-400 via-white to-gray-400 
+            dark:from-black dark:via-gray-700 dark:to-black
+            transition-all duration-1000 ease-in-out       `
           )}
         >
           {/* <SignedOut>

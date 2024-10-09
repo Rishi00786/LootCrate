@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Bad+Script&family=Londrina+Sketch&family=PT+Sans+Caption:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Sketch&family=PT+Sans+Caption:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Londrina+Sketch&family=PT+Sans+Caption:wght@400;700&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +11,24 @@ html,
 body,
 :root{
   height: 100%;
+}
+
+.heading-font {
+  font-family: "Bad Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.sub-sub-heading-font {
+  font-family: "PT Sans Caption", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.sub-heading-font{
+  font-family: "Architects Daughter", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 @layer base {

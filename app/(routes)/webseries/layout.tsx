@@ -4,7 +4,7 @@ import React from 'react'
 
 const WebSeriesLayout = ({children}:{children: React.ReactNode}) => {
   return (
-    <div className={cn("bg-gradient-to-r w-[100vw] min-h-screen from-blue-500 to-purple-500 dark:from-black dark:to-gray-800")}>
+    <div className={cn("w-[100vw] min-h-screen")}>
         <Navbar />
         {children}
     </div>

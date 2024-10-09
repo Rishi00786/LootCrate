@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Navbar from '@/components/ui2/Navbar';
@@ -48,7 +49,6 @@ const Page = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setResult(data.youtubeResults || []); // Update to use youtubeResults
         } else {
           console.error('Failed to fetch search results');
@@ -74,12 +74,8 @@ const Page = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Song saved successfully:', data);
-
         const downloadLink = data.downloadLink;
-        console.log(downloadLink);
-
-        if(downloadLink == undefined){
+        if (downloadLink === undefined) {
           alert('Please try any other choice.'); // Alert if no download link is returned
         }
 
@@ -91,7 +87,7 @@ const Page = () => {
           a.click(); // Simulate click to trigger download
           document.body.removeChild(a); // Remove the anchor from the document
         }
-      } else{
+      } else {
         console.error('Failed to save song');
       }
     } catch (error) {
@@ -102,57 +98,63 @@ const Page = () => {
   };
 
   return (
-    <div className={cn(
-      "bg-gradient-to-r w-[100vw] min-h-screen from-blue-500 to-purple-500 dark:from-black dark:to-gray-800"
-    )}>
+    <div className={cn("w-[100vw] min-h-screen")}>
       <Navbar />
-      <div className={`w-[100vw] mt-12 flex flex-col gap-8 items-center justify-start`}>
-
-        <>
-          <div className='text-5xl font-bold'>Search for Song</div>
-          <div className='flex item-center justify-center gap-4'>
-            <Input
-              className='w-[40vw] h-12'
-              type='text'
-              placeholder='e.g. Money Rain Phonk'
-              value={searchQuery}
-              onChange={handleInputChange}
-            />
-            <div className='flex items-center justify-center'>
-              <Button onClick={handleSearchSong}>Search</Button>
-            </div>
+      <div className={`w-full mt-12 flex flex-col gap-8 items-center justify-start px-4`}>
+        <div className='text-4xl sm:text-5xl font-bold text-center text-black dark:text-white sub-heading-font'>
+          Search for Song
+        </div>
+        <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
+          <Input
+            className='w-full sm:w-[40vw] h-12 mb-4 sm:mb-0'
+            type='text'
+            placeholder='e.g. Money Rain Phonk'
+            value={searchQuery}
+            onChange={handleInputChange}
+          />
+          <div className='flex items-center sub-sub-heading-font justify-center'>
+            <Button onClick={handleSearchSong}>Search</Button>
           </div>
-          {downloading && <Loader />} {/* Show loader during download */}
-          {loading ? <Loader /> : (
-            <div className={`mt-8 ${downloading ? 'blur-lg' : ''} flex flex-col gap-12 items-center justify-center`}>
-              {result.map((item, index) => (
-                <div key={index} className='flex items-center justify-center gap-8 w-[60vw] h-full rounded-lg shadow-lg overflow-hidden p-4'>
-                  <div className='flex flex-col items-center justify-center h-[25vh] w-full'>
-                    <div className='flex flex-col items-center flex-grow'>
-                      <div className='text-2xl font-bold text-white text-center'>{item.snippet.title}</div>
-                      <div className='flex items-center justify-center gap-4 mt-2'>
-                        <div className='text-sm text-gray-300'>By: {item.snippet.channelTitle}</div>
-                        <div className='text-sm text-gray-300'>PublishedAt: {new Date(item.snippet.publishedAt).toLocaleDateString()}</div>
-                        <div className='text-sm text-gray-300'>Duration: TBD</div>
-                      </div>
-                    </div>
+        </div>
+        
+          <div className={`mt-8 ${loading || downloading ? 'blur-lg' : ''} flex flex-col gap-8 items-center justify-center w-full`}>
+            {result.map((item, index) => (
+              <div key={index} className='flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full sm:w-[80vw] lg:w-[60vw]'>
+                <div className='flex flex-col items-center justify-center w-full rounded-lg shadow-lg p-4'>
+                  <div className='text-lg sub-sub-heading-font sm:text-2xl font-bold text-center'>
+                    {item.snippet.title}
+                  </div>
+                  <div className='text-sm sub-sub-heading-font text-center text-gray-400 mt-2'>
+                    {item.snippet.channelTitle}
+                  </div>
+                  <div className='text-xs sub-sub-heading-font sm:text-sm text-center text-teal-600 mt-1'>
+                    Published on: {new Date(item.snippet.publishedAt).toLocaleDateString()}
+                  </div>
+                  <div className='flex justify-center gap-4 mt-4'>
                     <div
                       onClick={() => handleSongDownload({
                         videoId: item.id.videoId,
                         videoTitle: item.snippet.title,
                         videoURL: `https://www.youtube.com/watch?v=${item.id.videoId}`
                       })}
-                      className='flex cursor-pointer w-56 items-center justify-center bg-yellow-700 p-3 rounded-lg shadow-md transition duration-200 hover:bg-yellow-600'
+                      className='flex cursor-pointer items-center justify-center bg-yellow-700 p-3 rounded-lg shadow-md transition duration-200 hover:bg-yellow-600'
                     >
-                      <div className='text-lg text-white font-semibold'>Download</div>
+                      <div className='text-lg sub-sub-heading-font sm:text-xl text-white font-semibold'>
+                        Download
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </>
+              </div>
+            ))}
+          </div>
       </div>
+
+      {(loading || downloading) && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 z-10">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

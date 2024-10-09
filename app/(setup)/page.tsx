@@ -17,12 +17,12 @@ export default async function HomePage() {
 
   return (
     <div className={cn(
-      "bg-gradient-to-r from-blue-500 to-purple-500 dark:from-black dark:to-gray-800"
+      "h-full"
     )}>
       <Navbar/>
       <Hero/>
       <Features/>
-      <Contact/>
+      <Contact/> 
     </div>
   );
 }

@@ -7,6 +7,8 @@ interface DownloadResponse {
     downloadLink: string | null;
 }
 
+
+
 async function solveHubCloudLink(hubcloudLink: string, page: Page, browser: Browser): Promise<string | null> {
     try {
         await page.goto(hubcloudLink, { waitUntil: 'networkidle0', timeout: 60000 });
@@ -152,6 +154,12 @@ export async function POST(req: Request): Promise<NextResponse<DownloadResponse>
         }
 
         console.log("Final processed link: " + finalDownloadLink);
+
+        // For FilePress: Directly return the final link after verification
+        if (finalDownloadLink.includes('filepress')) {
+            console.log("Returning FilePress verification link");
+            return NextResponse.json({ downloadLink: finalDownloadLink });  // Return verified link
+        }
 
         // Ensure the finalDownloadLink is a valid string, or return a default value (empty string, error message, etc.)
         let validDownloadLink = finalDownloadLink || 'No valid link found';
