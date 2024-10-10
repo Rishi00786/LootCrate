@@ -1,6 +1,7 @@
-import puppeteer from 'puppeteer';
 import { currentProfile } from "@/lib/current-profile";
 import { NextResponse } from "next/server";
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
 interface DownloadInfo {
     seasonInfo: string[];
@@ -8,8 +9,6 @@ interface DownloadInfo {
 }
 
 export async function POST(req: Request) {
-    let browser;
-
     try {
         // Get the current user profile
         const profile = await currentProfile();
@@ -25,42 +24,28 @@ export async function POST(req: Request) {
             return new NextResponse("Invalid input", { status: 400 });
         }
 
-        // Launch puppeteer and open a new browser page
-        browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
+        // Fetch the HTML content of the page using axios
+        const { data } = await axios.get(link);
 
-        // Navigate to the provided article link
-        await page.goto(link);
-        await page.waitForSelector('h3'); // Wait for h3 elements to load
+        // Load the HTML into Cheerio
+        const $ = cheerio.load(data);
 
         // Scrape the season information and Google Drive link
-        const downloadInfo: DownloadInfo[] = await page.evaluate(() => {
-            const results: DownloadInfo[] = [];
-            const h3Elements = document.querySelectorAll('h3');
+        const downloadInfo: DownloadInfo[] = [];
 
-            h3Elements.forEach((h3) => {
-                // Extract text from span elements inside the h3
-                const seasonInfo = Array.from(h3.querySelectorAll('span')).map((span) => span.textContent?.trim() || "");
+        $('h3').each((index, h3) => {
+            const seasonInfo = $(h3).find('span').map((_, span) => $(span).text().trim()).get();
 
-                // Get the next sibling 'p' tag after the h3
-                const pElement = h3.nextElementSibling as HTMLElement | null;
+            // Get the next sibling 'p' tag after the h3
+            const pElement = $(h3).next('p');
 
-                if (pElement?.tagName === 'P') {
-                    // Find the first anchor tag with the desired title attribute
-                    const firstAnchor = pElement.querySelector<HTMLAnchorElement>('a[title^="✔ Fast Gdrive & Direact Faster Links (No Login Required)"]');
+            // Find the first anchor tag with the desired title attribute
+            const googleDriveLink = pElement.find('a[title^="✔ Fast Gdrive & Direact Faster Links (No Login Required)"]').attr('href');
 
-                    if (firstAnchor?.href) {
-                        const googleDriveLink = firstAnchor.href; // Extract Google Drive link
-                        results.push({ seasonInfo, googleDriveLink });
-                    }
-                }
-            });
-
-            return results;
+            if (googleDriveLink) {
+                downloadInfo.push({ seasonInfo, googleDriveLink });
+            }
         });
-
-        // Close the browser after scraping
-        await browser.close();
 
         // Return the scraped data as JSON response
         return NextResponse.json({ downloadInfo });
@@ -68,11 +53,5 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error("[FETCHING QUALITY LINKS POST ERROR]", error);
         return new NextResponse("Internal Server Error", { status: 500 });
-
-    } finally {
-        // Ensure browser is closed even if an error occurs
-        if (browser) {
-            await browser.close();
-        }
     }
 }

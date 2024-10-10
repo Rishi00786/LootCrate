@@ -1,12 +1,10 @@
-import puppeteer from 'puppeteer-core'; // Use puppeteer-core
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { executablePath } from 'puppeteer'; // Import executablePath for serverless environments
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
 export async function POST(req: Request) {
-    let browser;
-
     try {
         const profile = await currentProfile();
         if (!profile) {
@@ -33,50 +31,31 @@ export async function POST(req: Request) {
             throw new Error("MYDATA environment variable is not defined");
         }
 
-        // Launch Puppeteer
-        try {
-            browser = await puppeteer.launch({
-                headless: true,
-                executablePath: executablePath(), // Specify executable path for serverless environments
-                args: ['--no-sandbox', '--disable-setuid-sandbox'], // Workaround for serverless
-            });
-        } catch (launchError) {
-            console.error('Puppeteer launch failed:', launchError);
-            return new NextResponse("Internal Server Error: Puppeteer failed to launch", { status: 500 });
-        }
+        // Fetch page content
+        const response = await axios.get(MYdata, {
+            params: {
+                s: searchQueryMovies, // Append search query
+            }
+        });
 
-        const page = await browser.newPage();
-        await page.goto(MYdata);
-
-        // Perform search
-        await page.type('input[name="s"]', searchQueryMovies);  // Ensure the selector is correct
-        await page.keyboard.press('Enter');
-
-        // Wait for results
-        await page.waitForNavigation(); // Or await page.waitForSelector('selector-for-search-results');
-
+        const html = response.data;
+        const $ = cheerio.load(html); // Load HTML into Cheerio
+        
         // Extract data
-        const articles = await page.evaluate(() => {
-            const results: { title: string; link: string }[] = [];
-            document.querySelectorAll('article a').forEach(anchor => {
-                const title = anchor.getAttribute('title');
-                const link = anchor.getAttribute('href');
-                if (title && link) {
-                    results.push({ title, link });
-                }
-            });
-            return results;
+        const articles: { title: string; link: string; }[] = [];
+        $('article a').each((_, element) => {
+            const title = $(element).attr('title');
+            const link = $(element).attr('href');
+            if (title && link) {
+                articles.push({ title, link });
+            }
         });
 
         // Return the search query data and scraped articles
         return NextResponse.json({ searchedQuery, articles });
-
+        
     } catch (error) {
         console.error("[SearchQueryMoviesArticles POST ERROR]", error);
         return new NextResponse("Internal Server Error", { status: 500 });
-    } finally {
-        if (browser) {
-            await browser.close(); // Ensure browser is closed
-        }
     }
 }
